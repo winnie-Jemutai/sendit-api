@@ -12,7 +12,6 @@ on:
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
 
     services:
@@ -31,7 +30,6 @@ jobs:
           --health-retries 5
 
     steps:
-
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -46,10 +44,10 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-cov httpx
 
-   - name: Run Tests
-  env:
-    DATABASE_URL: postgresql://postgres:postgres@localhost:5432/sendit_test
-    SECRET_KEY: test_secret
-  run: |
-    ls
-    pytest -v
+      - name: Run Tests
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/sendit_test
+          SECRET_KEY: test_secret
+        run: |
+          ls
+          pytest -v
