@@ -46,9 +46,10 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-cov httpx
 
-      - name: Run Tests
-        env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/sendit_test
-          SECRET_KEY: test_secret
-        run: |
-          pytest -v
+   - name: Run Tests
+  env:
+    DATABASE_URL: postgresql://postgres:postgres@localhost:5432/sendit_test
+    SECRET_KEY: test_secret
+  run: |
+    ls
+    pytest -v
