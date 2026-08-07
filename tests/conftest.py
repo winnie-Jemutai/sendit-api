@@ -1,18 +1,20 @@
 import pytest
 from fastapi.testclient import TestClient
 from sqlmodel import SQLModel, Session, create_engine
+from uuid import uuid4
 
 from main import app
 from database.session import get_session
 
-TEST_DATABASE_URL = "sqlite:///./test.db"
-
 
 @pytest.fixture
 def client():
+    # Create a unique SQLite database for every test
+    database_url = f"sqlite:///./test_{uuid4().hex}.db"
+
     engine = create_engine(
-        TEST_DATABASE_URL,
-        connect_args={"check_same_thread": False}
+        database_url,
+        connect_args={"check_same_thread": False},
     )
 
     SQLModel.metadata.create_all(engine)
@@ -36,5 +38,5 @@ def test_user():
         "email": "test@example.com",
         "password": "testpass123",
         "full_name": "Test User",
-        "role": "staff"
+        "role": "staff",
     }
