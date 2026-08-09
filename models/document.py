@@ -27,7 +27,7 @@ class Document(SQLModel, table=True):
     description: str | None = None
 
     uploader_id: int = Field(foreign_key="user.id")
-    uploader: User = Relationship(back_populates="documents")
+    uploader: "User" = Relationship(back_populates="documents")
 
     uploaded_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)

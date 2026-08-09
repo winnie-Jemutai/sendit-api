@@ -27,7 +27,7 @@ class User(SQLModel, table=True):
 
     last_login: datetime | None = None
 
-    documents: list[Document] = Relationship(back_populates="uploader")
+    documents: list["Document"] = Relationship(back_populates="uploader")
 
 
 class UserCreate(SQLModel):
