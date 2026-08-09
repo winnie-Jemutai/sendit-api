@@ -1,13 +1,14 @@
-from sqlmodel import SQLModel, Field, Relationship
 from datetime import datetime
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
+
+from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
     from models.user import User
 
 
 class Document(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
 
     filename: str
     original_filename: str
@@ -20,13 +21,13 @@ class Document(SQLModel, table=True):
     city: str = Field(index=True)
     country: str = Field(default="Kenya")
 
-    weather_data: Optional[str] = Field(default=None)
-    weather_fetched_at: Optional[datetime] = None
+    weather_data: str | None = Field(default=None)
+    weather_fetched_at: datetime | None = None
 
-    description: Optional[str] = None
+    description: str | None = None
 
     uploader_id: int = Field(foreign_key="user.id")
-    uploader: "User" = Relationship(back_populates="documents")
+    uploader: User = Relationship(back_populates="documents")
 
     uploaded_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
@@ -37,10 +38,10 @@ class Document(SQLModel, table=True):
 class DocumentCreate(SQLModel):
     city: str
     country: str = "Kenya"
-    description: Optional[str] = None
+    description: str | None = None
 
 
 class DocumentUpdate(SQLModel):
-    city: Optional[str] = None
-    country: Optional[str] = None
-    description: Optional[str] = None
+    city: str | None = None
+    country: str | None = None
+    description: str | None = None

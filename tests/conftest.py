@@ -1,10 +1,11 @@
-import pytest
-from fastapi.testclient import TestClient
-from sqlmodel import SQLModel, Session, create_engine
 from uuid import uuid4
 
-from main import app
+import pytest
+from fastapi.testclient import TestClient
+from sqlmodel import Session, SQLModel, create_engine
+
 from database.session import get_session
+from main import app
 
 
 @pytest.fixture

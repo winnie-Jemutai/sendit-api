@@ -13,7 +13,7 @@ def test_full_document_flow(client):
         "email": f"{username}@example.com",
         "password": "testpass123",
         "full_name": "Integration Test User",
-        "role": "staff"
+        "role": "staff",
     }
 
     # Register
@@ -23,19 +23,14 @@ def test_full_document_flow(client):
     # Login
     response = client.post(
         "/login",
-        data={
-            "username": test_user["username"],
-            "password": test_user["password"]
-        }
+        data={"username": test_user["username"], "password": test_user["password"]},
     )
 
     assert response.status_code == 200, response.text
 
     token = response.json()["access_token"]
 
-    headers = {
-        "Authorization": f"Bearer {token}"
-    }
+    headers = {"Authorization": f"Bearer {token}"}
 
     # Upload document
     response = client.post(
@@ -45,14 +40,14 @@ def test_full_document_flow(client):
             "file": (
                 "integration.pdf",
                 io.BytesIO(b"Integration Test"),
-                "application/pdf"
+                "application/pdf",
             )
         },
         data={
             "city": "Nairobi",
             "country": "Kenya",
-            "description": "Integration Test Document"
-        }
+            "description": "Integration Test Document",
+        },
     )
 
     assert response.status_code == 200, response.text
@@ -64,10 +59,7 @@ def test_full_document_flow(client):
     document_id = data["document_id"]
 
     # Retrieve document
-    response = client.get(
-        f"/documents/{document_id}",
-        headers=headers
-    )
+    response = client.get(f"/documents/{document_id}", headers=headers)
 
     assert response.status_code == 200, response.text
 

@@ -18,11 +18,7 @@ def test_invalid_login(client):
     """Invalid login credentials."""
 
     response = client.post(
-        "/login",
-        data={
-            "username": "wronguser",
-            "password": "wrongpassword"
-        }
+        "/login", data={"username": "wronguser", "password": "wrongpassword"}
     )
 
     assert response.status_code == 401

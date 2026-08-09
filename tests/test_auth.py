@@ -1,6 +1,3 @@
-from tests.conftest import client, test_user
-
-
 def test_register_user(client, test_user):
     """Test user registration."""
 
@@ -26,10 +23,7 @@ def test_login_user(client, test_user):
     # Login
     response = client.post(
         "/login",
-        data={
-            "username": test_user["username"],
-            "password": test_user["password"]
-        }
+        data={"username": test_user["username"], "password": test_user["password"]},
     )
 
     assert response.status_code == 200
@@ -46,11 +40,7 @@ def test_login_invalid_password(client, test_user):
     client.post("/register", json=test_user)
 
     response = client.post(
-        "/login",
-        data={
-            "username": test_user["username"],
-            "password": "wrongpassword"
-        }
+        "/login", data={"username": test_user["username"], "password": "wrongpassword"}
     )
 
     assert response.status_code == 401

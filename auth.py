@@ -1,11 +1,12 @@
-from passlib.context import CryptContext
-from jose import JWTError, jwt
-from datetime import datetime, timedelta
-from fastapi import HTTPException, Depends
-from fastapi.security import OAuth2PasswordBearer
-from sqlmodel import Session, select
-from dotenv import load_dotenv
 import os
+from datetime import datetime, timedelta
+
+from dotenv import load_dotenv
+from fastapi import Depends, HTTPException
+from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt
+from passlib.context import CryptContext
+from sqlmodel import Session, select
 
 from database.session import get_session
 from models.user import User
@@ -16,9 +17,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM", "HS256")
-ACCESS_TOKEN_EXPIRE_MINUTES = int(
-    os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30")
-)
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
@@ -33,9 +32,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(
-        minutes=ACCESS_TOKEN_EXPIRE_MINUTES
-    )
+    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
@@ -48,8 +45,7 @@ def decode_access_token(token: str):
 
 
 def get_current_user(
-    token: str = Depends(oauth2_scheme),
-    session: Session = Depends(get_session)
+    token: str = Depends(oauth2_scheme), session: Session = Depends(get_session)
 ):
     payload = decode_access_token(token)
 
@@ -58,9 +54,7 @@ def get_current_user(
     if username is None:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-    user = session.exec(
-        select(User).where(User.username == username)
-    ).first()
+    user = session.exec(select(User).where(User.username == username)).first()
 
     if user is None:
         raise HTTPException(status_code=401, detail="User not found")
@@ -71,23 +65,13 @@ def get_current_user(
     return user
 
 
-def get_current_admin(
-    current_user: User = Depends(get_current_user)
-):
+def get_current_admin(current_user: User = Depends(get_current_user)):
     if current_user.role != "admin":
-        raise HTTPException(
-            status_code=403,
-            detail="Admin access required"
-        )
+        raise HTTPException(status_code=403, detail="Admin access required")
     return current_user
 
 
-def get_current_manager(
-    current_user: User = Depends(get_current_user)
-):
+def get_current_manager(current_user: User = Depends(get_current_user)):
     if current_user.role not in ["admin", "manager"]:
-        raise HTTPException(
-            status_code=403,
-            detail="Manager or admin access required"
-        )
+        raise HTTPException(status_code=403, detail="Manager or admin access required")
     return current_user
