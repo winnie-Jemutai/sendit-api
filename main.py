@@ -13,7 +13,8 @@ from sqlmodel import Session, select
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
-
+import psutil
+import platform
 from datetime import datetime
 from typing import Optional
 from models.webhook import Webhook
@@ -91,6 +92,25 @@ def root():
         "message": "Welcome to SendIt Document Management API"
     }
 
+@app.get("/health")
+def health_check():
+    """Health check endpoint for monitoring."""
+    return {
+        "status": "healthy",
+        "timestamp": datetime.utcnow().isoformat(),
+        "version": "1.0.0"
+    }
+
+@app.get("/metrics")
+def get_metrics(
+    current_user: User = Depends(get_current_admin)
+):
+    """Metrics endpoint for monitoring (admin only)."""
+    return {
+        "cpu_percent": psutil.cpu_percent(),
+        "memory_percent": psutil.virtual_memory().percent,
+        "disk_usage": psutil.disk_usage("/").percent
+    }
 @app.post("/register", response_model=UserResponse)
 def register(
     user: UserCreate,
