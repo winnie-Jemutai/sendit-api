@@ -27,12 +27,14 @@ passlib==1.7.4
 pluggy==1.6.0
 psutil==7.2.2
 psycopg2-binary==2.9.12
+py-cpuinfo==9.0.0
 pyasn1==0.6.4
 pycparser==3.0
 pydantic==2.13.4
 pydantic_core==2.46.4
 Pygments==2.20.0
 pytest==9.1.1
+pytest-benchmark==5.2.3
 pytest-cov==7.1.0
 python-dotenv==1.2.2
 python-jose==3.5.0
