@@ -4,3 +4,7 @@
 .coverage
 uploads/
 pyproject.toml.backup
+
+# Python cache
+__pycache__/
+*.pyc
