@@ -1,0 +1,6 @@
+
+# Lab 11 test files
+*.db
+.coverage
+uploads/
+pyproject.toml.backup
